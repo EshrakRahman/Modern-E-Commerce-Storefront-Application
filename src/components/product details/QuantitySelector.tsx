@@ -7,7 +7,7 @@ interface QuantitySelectorProps {
   onAddToCart?: (quantity: number) => void;
 }
 
-export default function QuantitySelector({ productId, onChange, onAddToCart }: QuantitySelectorProps) {
+export default function QuantitySelector({ onChange, onAddToCart }: QuantitySelectorProps) {
   const [quantity, setQuantity] = useState(1);
 
   const handleDecrease = () => {
