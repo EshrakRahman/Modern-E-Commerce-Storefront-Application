@@ -1,5 +1,5 @@
 [[redirects]]
   from = "/api/*"
-  to = "http://ecom-api.test/api/:splat"
+  to = "http://175.41.177.26/api/:splat"
   status = 200
   force = true
