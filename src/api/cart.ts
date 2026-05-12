@@ -1,6 +1,6 @@
 import {apiFetch} from "@/api/client.ts";
 import {z} from "zod";
-import type {CartPreviewResponseSchema} from "@/schemas/productSchema.ts";
+import {CartPreviewResponseSchema} from "@/schemas/productSchema.ts";
 
 type CartPreviewResponse = z.infer<typeof CartPreviewResponseSchema>;
 
