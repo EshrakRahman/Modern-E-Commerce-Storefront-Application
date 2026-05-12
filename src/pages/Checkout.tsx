@@ -56,7 +56,8 @@ export default function Checkout() {
       });
 
       clearCart();
-      await navigate({to: "/order-success", search: {orderNumber: result.order_number}});
+      const orderSearch = { orderNumber: result.order_number };
+      await navigate({to: "/order-success", search: orderSearch });
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message);

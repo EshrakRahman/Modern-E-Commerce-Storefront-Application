@@ -12,8 +12,9 @@ type Props = {
     prdImg?: string;
 }
 export default function ProductCard({title, ratings, slug, price, discount, discountedPrice, prdImg}: Props) {
+    const linkParams = { slug };
     return (
-        <Link to="/products/$slug" params={{ slug }} className="block w-50">
+        <Link to="/products/$slug" params={linkParams} className="block w-50">
             <section className="w-50">
                 <div className="product-img rounded-2xl w-50 h-50 bg-[#F0EEED] p-4">
                     <img

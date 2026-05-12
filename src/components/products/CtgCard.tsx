@@ -8,8 +8,9 @@ type Props = {
     slug: string;
 }
 export default function CtgCard({className, title, slug}: Props) {
+    const linkParams = { slug };
     return(
-        <Link to="/categories/$slug" params={{ slug }} className={clsx("block", className)}>
+        <Link to="/categories/$slug" params={linkParams} className={clsx("block", className)}>
             <section className="ctg-card bg-yellow-600 rounded-xl relative w-full lg:h-73 h-48 overflow-hidden">
                 <div className="card  flex py-8">
                     <div className="left w-1/3 px-6">

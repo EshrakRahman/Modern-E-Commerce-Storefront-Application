@@ -26,30 +26,29 @@ export default function NewArrivalsPage() {
 
   const { items, totalPages, totalCount, categories } = useProductFilters(products, filters);
 
-  const setFilter = (key: string, value: string | undefined) => {
-    navigate({ search: (prev: Record<string, string | undefined>) => ({ ...prev, [key]: value ?? undefined, page: "1" }) });
-  };
-
-  const goToPage = (p: number) => {
-    navigate({ search: (prev: Record<string, string | undefined>) => ({ ...prev, page: String(p) }) });
-  };
-
   const toggleCategory = (cat: string) => {
-    setFilter("category", category === cat.toLowerCase() ? undefined : cat.toLowerCase());
+    const nextCategory = category === cat.toLowerCase() ? undefined : cat.toLowerCase();
+    const searchParams = { page: "1", category: nextCategory, minPrice: minPriceStr, maxPrice: maxPriceStr, size };
+    navigate({ search: searchParams });
   };
 
   const togglePrice = (min: string, max: string | undefined) => {
     const isActive = minPriceStr === min && maxPriceStr === (max ?? undefined);
-    if (isActive) {
-      setFilter("minPrice", undefined);
-      setFilter("maxPrice", undefined);
-    } else {
-      navigate({ search: (prev: Record<string, string | undefined>) => ({ ...prev, minPrice: min, maxPrice: max ?? undefined, page: "1" }) });
-    }
+    const searchParams = isActive
+      ? { page: "1", category, minPrice: undefined, maxPrice: undefined, size }
+      : { page: "1", category, minPrice: min, maxPrice: max ?? undefined, size };
+    navigate({ search: searchParams });
   };
 
   const toggleSize = (s: string) => {
-    setFilter("size", size === s ? undefined : s);
+    const nextSize = size === s ? undefined : s;
+    const searchParams = { page: "1", category, minPrice: minPriceStr, maxPrice: maxPriceStr, size: nextSize };
+    navigate({ search: searchParams });
+  };
+
+  const goToPage = (p: number) => {
+    const searchParams = { page: String(p), category, minPrice: minPriceStr, maxPrice: maxPriceStr, size };
+    navigate({ search: searchParams });
   };
 
   return (

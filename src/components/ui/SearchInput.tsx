@@ -15,7 +15,8 @@ export default function SearchInput({ onClose }: SearchInputProps) {
         const trimmed = query.trim();
         if (!trimmed) return;
         onClose?.();
-        navigate({ to: "/categories/all", search: { q: trimmed } });
+        const searchParams = { q: trimmed };
+        navigate({ to: "/categories/all", search: searchParams });
     };
 
     return (

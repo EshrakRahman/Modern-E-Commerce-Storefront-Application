@@ -1,4 +1,5 @@
 import { useState } from "react"
+import type { ReactNode } from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
@@ -103,7 +104,7 @@ function Rating({
   }
 
   const renderStars = () => {
-    const stars = []
+    const stars: ReactNode[] = []
 
     for (let i = 1; i <= maxRating; i++) {
       const filled = displayRating >= i
