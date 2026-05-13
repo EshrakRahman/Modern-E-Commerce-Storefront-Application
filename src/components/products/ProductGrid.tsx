@@ -43,6 +43,7 @@ export default function ProductGrid({ products, isLoading }: Props) {
         return (
           <ProductCard
             key={product.id}
+            id={product.id}
             slug={product.slug}
             title={product.name}
             price={product.price}

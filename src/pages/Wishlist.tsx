@@ -65,6 +65,7 @@ export default function Wishlist() {
                     <FiHeart className="text-red-500 fill-red-500" />
                   </button>
                   <ProductCard
+                    id={product.id}
                     slug={product.slug}
                     title={product.name}
                     price={product.price}

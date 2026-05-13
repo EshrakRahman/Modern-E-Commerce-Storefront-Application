@@ -61,6 +61,7 @@ export default function NewArrivals() {
                                 className="min-w-55 shrink-0"
                             >
                                 <ProductCard
+                                    id={product.id}
                                     slug={product.slug}
                                     prdImg={product.image ?? undefined}
                                     title={product.name}
