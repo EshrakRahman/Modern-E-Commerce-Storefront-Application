@@ -5,6 +5,7 @@ import {
   logoutUser,
   getCurrentUser,
 } from "@/api/auth.ts";
+import {toast} from "sonner";
 
 type User = { id: number; name: string; email: string };
 
@@ -65,6 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setStoredToken(result.token);
     setToken(result.token);
     setUser(result.user);
+    toast('Logged in successfully!');
     return result.user;
   };
 
@@ -83,6 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setStoredToken(result.token);
     setToken(result.token);
     setUser(result.user);
+    toast('Registered successfully!');
     return result.user;
   };
 
@@ -95,6 +98,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setStoredToken(null);
     setToken(null);
     setUser(null);
+    toast('Logged out successfully!');
   };
 
   return (

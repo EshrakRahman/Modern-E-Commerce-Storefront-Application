@@ -1,3 +1,4 @@
+import { ShoppingBag } from "lucide-react";
 import Container from "@/components/layout/Container.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import { Link } from "@tanstack/react-router";
@@ -24,8 +25,13 @@ export default function Cart() {
           <div className="lg:col-span-8">
             <div className="space-y-6">
               {items.length === 0 ? (
-                <div className="text-center py-12 text-gray-500">
-                  Your cart is empty
+                <div className="text-center py-20">
+                  <ShoppingBag className="mx-auto h-16 w-16 text-gray-300" />
+                  <h2 className="mt-4 text-xl font-semibold">Your cart is empty</h2>
+                  <p className="mt-2 text-gray-500">Looks like you haven't added anything yet.</p>
+                  <Link to="/new-arrivals">
+                    <Button className="mt-6 rounded-full">Browse New Arrivals</Button>
+                  </Link>
                 </div>
               ) : (
                 items.map((item) => (

@@ -12,6 +12,7 @@ import {
   removeFromWishlist,
 } from "@/api/wishlist.ts";
 import type { Product } from "@/schemas/productSchema.ts";
+import {toast} from "sonner";
 
 type WishlistContextType = {
   items: Product[];
@@ -39,6 +40,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
       setItems(data);
     } catch {
       setItems([]);
+      toast.error('Failed to fetch wishlist');
     } finally {
       setIsLoading(false);
     }
@@ -51,11 +53,13 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
   const add = useCallback(async (productId: number) => {
     await addToWishlist(productId);
     await fetchWishlist();
+    toast('Item added to wishlist!');
   }, [fetchWishlist]);
 
   const remove = useCallback(async (productId: number) => {
     await removeFromWishlist(productId);
     await fetchWishlist();
+    toast('Item removed from wishlist!');
   }, [fetchWishlist]);
 
   const isWishlisted = useCallback(

@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, Link } from "@tanstack/react-router";
+import { ShoppingBag } from "lucide-react";
 import Container from "@/components/layout/Container.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { useCart } from "@/context/CartContext.tsx";
 import { placeOrder } from "@/api/orders.ts";
 import { ApiError } from "@/api/client.ts";
+import {toast} from "sonner";
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -58,6 +60,7 @@ export default function Checkout() {
       clearCart();
       const orderSearch = { orderNumber: result.order_number };
       await navigate({to: "/order-success", search: orderSearch });
+      toast.success("Order placed successfully!");
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message);
@@ -70,6 +73,21 @@ export default function Checkout() {
   };
 
   const inputClass = "w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-black/10";
+
+  if (items.length === 0) {
+    return (
+      <Container>
+        <div className="text-center py-20">
+          <ShoppingBag className="mx-auto h-16 w-16 text-gray-300" />
+          <h2 className="mt-4 text-xl font-semibold">Nothing to check out</h2>
+          <p className="mt-2 text-gray-500">Your cart is empty. Add some items first.</p>
+          <Link to="/new-arrivals">
+            <Button className="mt-6 rounded-full">Browse New Arrivals</Button>
+          </Link>
+        </div>
+      </Container>
+    );
+  }
 
   return (
     <Container>

@@ -1,3 +1,4 @@
+import { SearchX } from "lucide-react";
 import ProductCard from "@/components/products/ProductCard";
 import type { Product } from "@/schemas/productSchema";
 
@@ -24,7 +25,9 @@ export default function ProductGrid({ products, isLoading }: Props) {
   if (products.length === 0) {
     return (
       <div className="text-center py-20">
-        <p className="text-gray-500">No products found.</p>
+        <SearchX className="mx-auto h-16 w-16 text-gray-300" />
+        <h2 className="mt-4 text-xl font-semibold">No products found</h2>
+        <p className="mt-2 text-gray-500">Try adjusting your search or filters.</p>
       </div>
     );
   }

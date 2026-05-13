@@ -17,6 +17,7 @@ import {
 } from "@/api/cart.ts";
 import type { LocalCartItem } from "@/api/cart.ts";
 import type { CartPreviewResponse } from "@/schemas/productSchema.ts";
+import {toast} from "sonner";
 
 type CartContextType = {
   items: LocalCartItem[];
@@ -60,18 +61,22 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+
     triggerPreview(items);
+
   }, [items, triggerPreview]);
 
   const addItem = useCallback((item: LocalCartItem) => {
     const updated = addToLocalCart(item);
     setItems([...updated]);
+    toast('Item added to cart!');
   }, []);
 
   const removeItem = useCallback(
     (productId: number, sizeId: number | null) => {
       const updated = removeFromLocalCart(productId, sizeId);
       setItems([...updated]);
+      toast('Item removed from cart!');
     },
     []
   );
@@ -81,6 +86,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       if (qty < 1) return;
       const updated = updateLocalCartQuantity(productId, sizeId, qty);
       setItems([...updated]);
+      toast('Quantity updated!');
     },
     []
   );
@@ -89,6 +95,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     clearLocalCart();
     setItems([]);
     setPreview(null);
+    toast('Cart cleared!');
   }, []);
 
   return (
