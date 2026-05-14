@@ -1,4 +1,5 @@
-import Header from "@/components/header/Header.tsx";
+import BannerCarousel from "@/components/header/BannerCarousel.tsx";
+import LogoBar from "@/components/header/LogoBar.tsx";
 import NewArrivals from "@/components/products/NewArrivals.tsx";
 import BestSelling from "@/components/products/BestSelling.tsx";
 import {Suspense} from "react";
@@ -11,7 +12,10 @@ import SimilarProducts from "@/components/product details/SimilarProducts.tsx";
 export default function Home() {
     return (
         <>
-            <Header />
+            <Suspense fallback={<div className="w-full min-h-[250px] md:min-h-[400px] lg:min-h-[550px] bg-gray-100 animate-pulse" />}>
+                <BannerCarousel />
+            </Suspense>
+            <LogoBar />
             <Suspense fallback={<ProductSkeleton />}>
                 <NewArrivals />
             </Suspense>
