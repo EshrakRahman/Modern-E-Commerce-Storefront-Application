@@ -75,6 +75,7 @@ export default function Wishlist() {
                       hasDiscount ? product.compare_price! : undefined
                     }
                     discount={discountPercent}
+                    sizes={product.sizes}
                   />
                 </div>
               );

@@ -51,6 +51,7 @@ export default function ProductGrid({ products, isLoading }: Props) {
             prdImg={product.image ?? undefined}
             discountedPrice={hasDiscount ? product.compare_price! : undefined}
             discount={discountPercent}
+            sizes={product.sizes}
           />
         );
       })}

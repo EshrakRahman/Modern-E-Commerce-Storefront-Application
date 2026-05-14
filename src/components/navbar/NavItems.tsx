@@ -1,40 +1,72 @@
 import { useState } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
+
+const CATEGORIES = [
+  { name: "T-Shirts", slug: "t-shirts" },
+  { name: "Shirts", slug: "shirts" },
+  { name: "Pants", slug: "pants" },
+  { name: "Jackets", slug: "jackets" },
+  { name: "Shoes", slug: "shoes" },
+  { name: "Accessories", slug: "accessories" },
+];
 
 export default function NavItems() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { pathname } = useLocation();
+
+  const isActive = (path: string) => pathname === path;
+
+  const linkClass = (path: string) =>
+    `block px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+      isActive(path)
+        ? "text-orange-400 bg-gray-800"
+        : "text-white/70 hover:text-white hover:bg-gray-800"
+    }`;
 
   return (
-    <div className=" bg-black text-white mt-4 rounded-md w-full p-4">
-      <ul className="flex gap-5 flex-col">
-        <li className="flex items-center gap-2 relative">
+    <div className="bg-black mt-4 rounded-xl w-full p-4">
+      <ul className="flex flex-col gap-1">
+        <li>
           <button
             onClick={() => setIsDropdownOpen((prev) => !prev)}
-            className="flex items-center gap-2"
+            className="flex items-center justify-between w-full px-3 py-2 rounded-lg text-sm font-medium text-white/70 hover:text-white hover:bg-gray-800 transition-colors cursor-pointer"
           >
-            <span className="">Shop</span>
-            <IoMdArrowDropdown />
+            <span>Shop</span>
+            <IoMdArrowDropdown
+              className={`transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`}
+            />
           </button>
           {isDropdownOpen && (
-            <ul className="absolute left-20 top-0 mt-2 flex flex-col gap-3 bg-gray-800 text-white p-3 rounded-md shadow-lg min-w-37.5">
-              <li className="hover:text-orange-400 cursor-pointer">
-                <Link to="/">Sub-item 1</Link>
-              </li>
-              <li className="hover:text-orange-400 cursor-pointer">
-                <Link to="/">Sub-item 2</Link>
-              </li>
+            <ul className="ml-3 mt-1 flex flex-col gap-1 border-l border-gray-700 pl-3">
+              {CATEGORIES.map((cat) => (
+                <li key={cat.slug}>
+                  <Link
+                    to="/categories/$slug"
+                    params={{ slug: cat.slug }}
+                    className={linkClass("/categories/" + cat.slug)}
+                  >
+                    {cat.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           )}
         </li>
         <li>
-          <Link to="/">On Sale</Link>
+          <Link to="/on-sale" className={linkClass("/on-sale")}>
+            On Sale
+          </Link>
         </li>
         <li>
-          <Link to="/">New Arrivals</Link>
+          <Link to="/new-arrivals" className={linkClass("/new-arrivals")}>
+            New Arrivals
+          </Link>
         </li>
         <li>
-          <Link to="/">Brands</Link>
+          <Link to="/brands" className={linkClass("/brands")}>
+            Brands
+          </Link>
         </li>
       </ul>
     </div>

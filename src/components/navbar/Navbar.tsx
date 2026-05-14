@@ -58,7 +58,7 @@ export default function Navbar() {
                               <p className="text-sm font-medium text-black truncate">{user.name}</p>
                               <p className="text-xs text-black/40 truncate">{user.email}</p>
                             </div>
-                            <Link to="/" className="flex items-center gap-2 px-4 py-2 text-sm text-black/60 hover:text-black hover:bg-gray-50 transition-colors">
+                            <Link to="/account" className="flex items-center gap-2 px-4 py-2 text-sm text-black/60 hover:text-black hover:bg-gray-50 transition-colors">
                               <MdPerson className="text-lg" />
                               My Account
                             </Link>

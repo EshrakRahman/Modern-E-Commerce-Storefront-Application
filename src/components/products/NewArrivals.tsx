@@ -58,7 +58,7 @@ export default function NewArrivals() {
                         {data.map((product) => (
                             <div
                                 key={product.id}
-                                className="min-w-55 shrink-0"
+                                className="min-w-48 shrink-0"
                             >
                                 <ProductCard
                                     id={product.id}
@@ -68,6 +68,7 @@ export default function NewArrivals() {
                                     ratings={4.5}
                                     price={product.price}
                                     discount={false}
+                                    sizes={product.sizes}
                                 />
                             </div>
                         ))}

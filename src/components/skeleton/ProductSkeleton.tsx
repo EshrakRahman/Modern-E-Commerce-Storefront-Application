@@ -24,7 +24,7 @@ export default function ProductSkeleton() {
                         {Array.from({length: 10}).slice(0, 10).map((_, index) => (
                             <div
                                 key={index}
-                                className="min-w-55 shrink-0"
+                                className="min-w-48 shrink-0"
                             >
                                 <ProductCardSkeleton />
                             </div>
