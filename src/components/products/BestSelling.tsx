@@ -71,6 +71,9 @@ export default function BestSelling() {
                                     title={product.name}
                                     ratings={4.5}
                                     price={product.price}
+                                    sale_price={product.sale_price}
+                                    has_discount={product.has_discount}
+                                    compare_price={product.compare_price}
                                     sizes={product.sizes}
                                 />
                             </div>

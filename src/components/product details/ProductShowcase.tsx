@@ -16,7 +16,7 @@ export default function ProductShowcase({ product }: Props) {
     addItem({
       product_id: product.id,
       product_name: product.name,
-      price: product.price,
+      price: product.has_discount ? (product.sale_price ?? product.price) : product.price,
       image: product.image ?? "",
       quantity,
       size_id: selectedSize,

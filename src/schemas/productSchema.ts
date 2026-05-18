@@ -14,6 +14,8 @@ export const ProductSchema = z.object({
   category: z.string().nullable(),
   description: z.string().nullable(),
   price: z.number(),
+  sale_price: z.number().nullable().optional(),
+  has_discount: z.boolean().nullable().optional(),
   compare_price: z.number().nullable(),
   quantity: z.number(),
   image: z.string().nullable(),

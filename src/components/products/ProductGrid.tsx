@@ -34,27 +34,21 @@ export default function ProductGrid({ products, isLoading }: Props) {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-      {products.map((product) => {
-        const hasDiscount = product.compare_price != null && product.compare_price > product.price;
-        const discountPercent = hasDiscount
-          ? Math.round(((product.compare_price! - product.price) / product.compare_price!) * 100)
-          : undefined;
-
-        return (
+      {products.map((product) => (
           <ProductCard
             key={product.id}
             id={product.id}
             slug={product.slug}
             title={product.name}
             price={product.price}
+            sale_price={product.sale_price}
+            has_discount={product.has_discount}
+            compare_price={product.compare_price}
             ratings={4.5}
             prdImg={product.image ?? undefined}
-            discountedPrice={hasDiscount ? product.compare_price! : undefined}
-            discount={discountPercent}
             sizes={product.sizes}
           />
-        );
-      })}
+      ))}
     </div>
   );
 }

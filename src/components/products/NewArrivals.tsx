@@ -67,7 +67,9 @@ export default function NewArrivals() {
                                     title={product.name}
                                     ratings={4.5}
                                     price={product.price}
-                                    discount={false}
+                                    sale_price={product.sale_price}
+                                    has_discount={product.has_discount}
+                                    compare_price={product.compare_price}
                                     sizes={product.sizes}
                                 />
                             </div>

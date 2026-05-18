@@ -12,14 +12,15 @@ type Props = {
     title: string;
     ratings: number;
     slug: string;
-    price?: number | string;
-    discountedPrice?: number;
-    discount?: number | boolean;
+    price: number;
+    sale_price?: number | null;
+    has_discount?: boolean | null;
+    compare_price?: number | null;
     prdImg?: string;
     sizes?: Size[];
 }
 
-export default function ProductCard({ id, title, ratings, slug, price, discount, discountedPrice, prdImg, sizes }: Props) {
+export default function ProductCard({ id, title, ratings, slug, price, sale_price, has_discount, compare_price, prdImg, sizes }: Props) {
     const { user } = useAuth();
     const { isWishlisted, add, remove } = useWishlist();
     const { addItem } = useCart();
@@ -27,6 +28,13 @@ export default function ProductCard({ id, title, ratings, slug, price, discount,
     const wishlisted = isWishlisted(id);
     const hasSizes = sizes && sizes.length > 0;
     const linkParams = { slug };
+
+    const hasSale = has_discount || (compare_price != null && compare_price > price);
+    const currentPrice = has_discount ? (sale_price ?? price) : price;
+    const originalPrice = has_discount ? price : (compare_price && compare_price > price ? compare_price : null);
+    const discountPercent = hasSale && originalPrice != null && originalPrice > 0
+        ? Math.round(((originalPrice - currentPrice) / originalPrice) * 100)
+        : null;
 
     const toggleWishlist = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -47,7 +55,7 @@ export default function ProductCard({ id, title, ratings, slug, price, discount,
             addItem({
                 product_id: id,
                 product_name: title,
-                price: typeof price === "number" ? price : Number(price ?? 0),
+                price: currentPrice,
                 image: prdImg ?? "",
                 quantity: 1,
                 size_id: null,
@@ -59,7 +67,7 @@ export default function ProductCard({ id, title, ratings, slug, price, discount,
     return (
         <Link to="/products/$slug" params={linkParams} className="block group">
             <section className="w-48">
-                <div className="product-img rounded-2xl w-48 h-48 bg-[#F0EEED] p-4 relative overflow-hidden">
+                <div className="product-img rounded-2xl w-48 h-48 bg-[#F0EEED] relative overflow-hidden">
                     {user && (
                         <button
                             onClick={toggleWishlist}
@@ -69,11 +77,13 @@ export default function ProductCard({ id, title, ratings, slug, price, discount,
                             <Heart className={`w-4 h-4 ${wishlisted ? "fill-red-500 text-red-500" : "text-gray-600"}`} />
                         </button>
                     )}
-                    <img
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        src={prdImg}
-                        alt={title}
-                    />
+                    {prdImg && (
+                        <img
+                            className="w-full h-full object-cover rounded-2xl group-hover:scale-105 transition-transform duration-500"
+                            src={prdImg}
+                            alt={title}
+                        />
+                    )}
                     <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                         <button
                             onClick={handleAddToCart}
@@ -88,12 +98,12 @@ export default function ProductCard({ id, title, ratings, slug, price, discount,
                     <p className="text-black font-primary font-bold text-sm leading-snug line-clamp-2">{title}</p>
                     <Ratings ratings={ratings} />
                     <div className="flex items-center gap-2 flex-wrap">
-                        <p className="font-bold text-black text-base">${price ?? 0}</p>
-                        {discountedPrice && (
-                            <>
-                                <p className="font-bold text-black/40 text-sm line-through">${discountedPrice}</p>
-                                <Badge variant="destructive" className="text-[10px] px-1.5 py-0.5">-{discount}%</Badge>
-                            </>
+                        <span className="font-bold text-black text-base">${currentPrice}</span>
+                        {originalPrice && (
+                            <span className="font-bold text-black/40 text-sm line-through">${originalPrice}</span>
+                        )}
+                        {discountPercent && (
+                            <Badge variant="destructive" className="text-[10px] px-1.5 py-0.5">-{discountPercent}%</Badge>
                         )}
                     </div>
                 </div>
