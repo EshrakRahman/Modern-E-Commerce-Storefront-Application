@@ -85,6 +85,7 @@ export const OrderSchema = z.object({
   billing_address: AddressSchema.nullable(),
   notes: z.string().nullable(),
   payment_status: z.string(),
+  payment_intent_client_secret: z.string().nullable().optional(),
   created_at: z.string(),
 });
 
