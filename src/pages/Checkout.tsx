@@ -62,7 +62,7 @@ export default function Checkout() {
       const result = await placeOrder({
         items: items.map((i) => ({
           product_id: i.product_id,
-          size_id: i.size_id,
+          size_id: i.size_id ?? undefined,
           quantity: i.quantity,
         })),
         payment_method: "stripe",
@@ -87,7 +87,12 @@ export default function Checkout() {
       });
     } catch (err) {
       if (err instanceof ApiError) {
-        setError(err.message);
+        const fieldErrors = err.errors
+          ? Object.entries(err.errors)
+              .map(([field, msgs]) => `${field}: ${msgs.join(", ")}`)
+              .join("; ")
+          : "";
+        setError(fieldErrors ? `${err.message} — ${fieldErrors}` : err.message);
       } else {
         setError("Something went wrong. Please try again.");
       }
