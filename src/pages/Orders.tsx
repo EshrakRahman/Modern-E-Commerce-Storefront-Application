@@ -121,12 +121,12 @@ export default function Orders() {
                   </div>
                   <div className="text-right">
                     <p className="font-bold text-lg">${order.total.toFixed(2)}</p>
-                    {order.shipping_cost > 0 && (
+                    {order.shipping_cost != null && order.shipping_cost > 0 && (
                       <p className="text-xs text-gray-400">
                         Shipping: ${order.shipping_cost.toFixed(2)}
                       </p>
                     )}
-                    {order.discount > 0 && (
+                    {order.discount != null && order.discount > 0 && (
                       <p className="text-xs text-green-600">
                         Discount: -${order.discount.toFixed(2)}
                       </p>

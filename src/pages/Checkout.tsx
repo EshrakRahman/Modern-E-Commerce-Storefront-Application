@@ -4,7 +4,7 @@ import { ShoppingBag } from "lucide-react";
 import Container from "@/components/layout/Container.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { useCart } from "@/context/CartContext.tsx";
-import { placeOrder, retryPayment, getPaymentStatus } from "@/api/orders.ts";
+import { placeOrder, confirmPayment, retryPayment } from "@/api/orders.ts";
 import { ApiError } from "@/api/client.ts";
 import { toast } from "sonner";
 import PaymentForm from "@/components/checkout/PaymentForm.tsx";
@@ -65,6 +65,7 @@ export default function Checkout() {
           size_id: i.size_id,
           quantity: i.quantity,
         })),
+        payment_method: "stripe",
         shipping_address: {
           name,
           phone,
@@ -97,22 +98,46 @@ export default function Checkout() {
 
   const handlePaymentSuccess = async () => {
     const currentOrder = order!;
-    for (let i = 0; i < 10; i++) {
-      try {
-        const status = await getPaymentStatus(currentOrder.id);
-        if (status.payment_status === "paid") break;
-      } catch {
-        // continue polling
+
+    try {
+      const confirmation = await confirmPayment(currentOrder.id);
+
+      if (confirmation.paid) {
+        clearCart();
+        setOrder(null);
+        await navigate({
+          to: "/order-success",
+          search: { orderNumber: currentOrder.order_number },
+        });
+        toast.success("Payment successful!");
+      } else if (confirmation.stripe_status === "processing") {
+        await new Promise((r) => setTimeout(r, 2000));
+        const retry = await confirmPayment(currentOrder.id);
+        if (retry.paid) {
+          clearCart();
+          setOrder(null);
+          await navigate({
+            to: "/order-success",
+            search: { orderNumber: currentOrder.order_number },
+          });
+          toast.success("Payment successful!");
+        } else {
+          setError("Payment is still processing. Please check your orders page.");
+        }
+      } else {
+        setError(
+          confirmation.stripe_status === "requires_payment_method"
+            ? "Payment was declined. Please try a different card."
+            : "Payment verification failed. Please try again."
+        );
       }
-      await new Promise((r) => setTimeout(r, 1500));
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.message);
+      } else {
+        setError("Unable to verify payment. Please try again.");
+      }
     }
-    clearCart();
-    setOrder(null);
-    await navigate({
-      to: "/order-success",
-      search: { orderNumber: currentOrder.order_number },
-    });
-    toast.success("Payment successful!");
   };
 
   const handleRetryPayment = async (): Promise<string | null> => {

@@ -78,13 +78,14 @@ export const OrderSchema = z.object({
   status: z.string(),
   items: z.array(OrderItemSchema),
   subtotal: z.number(),
-  shipping_cost: z.number(),
-  discount: z.number(),
+  shipping_cost: z.number().nullable(),
+  discount: z.number().nullable(),
   total: z.number(),
   shipping_address: AddressSchema,
   billing_address: AddressSchema.nullable(),
   notes: z.string().nullable(),
-  payment_status: z.string(),
+  payment_status: z.string().nullable(),
+  payment_intent_id: z.string().nullable().optional(),
   payment_intent_client_secret: z.string().nullable().optional(),
   created_at: z.string(),
 });
@@ -97,6 +98,7 @@ export const PlaceOrderItemSchema = z.object({
 
 export const PlaceOrderPayloadSchema = z.object({
   items: z.array(PlaceOrderItemSchema),
+  payment_method: z.string().optional(),
   shipping_address: AddressSchema,
   billing_address: AddressSchema.nullable().optional(),
   notes: z.string().nullable().optional(),

@@ -79,9 +79,22 @@ function InnerForm({
 
       if (paymentIntent.status === "succeeded") {
         onSuccess();
-      } else {
-        setError(`Payment status: ${paymentIntent.status}`);
+        return;
       }
+
+      if (paymentIntent.status === "requires_action") {
+        const { error: actionError } = await stripe.handleCardAction(
+          clientSecret
+        );
+        if (actionError) {
+          setError(actionError.message ?? "Authentication failed");
+          return;
+        }
+        onSuccess();
+        return;
+      }
+
+      setError(`Payment status: ${paymentIntent.status}`);
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
