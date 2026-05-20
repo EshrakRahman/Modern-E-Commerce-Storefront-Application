@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 import {
   useStripe,
   useElements,
@@ -18,6 +20,7 @@ type PaymentFormProps = {
   order: OrderData;
   onSuccess: () => void;
   onRetryPayment: () => Promise<string | null>;
+  onClose: () => void;
 };
 
 const cardElementOptions = {
@@ -37,7 +40,7 @@ function InnerForm({
   onSuccess,
   onRetryPayment,
   onClose,
-}: PaymentFormProps & { onClose: () => void }) {
+}: PaymentFormProps) {
   const stripe = useStripe();
   const elements = useElements();
   const [error, setError] = useState<string | null>(null);
@@ -172,6 +175,18 @@ function InnerForm({
   );
 }
 
-export default function PaymentForm(props: PaymentFormProps & { onClose: () => void }) {
-  return <InnerForm {...props} />;
+export default function PaymentForm(props: PaymentFormProps) {
+  const [stripePromise] = useState(() => {
+    const key = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+    if (!key) return null;
+    return loadStripe(key);
+  });
+
+  if (!stripePromise) return null;
+
+  return (
+    <Elements stripe={stripePromise}>
+      <InnerForm {...props} />
+    </Elements>
+  );
 }

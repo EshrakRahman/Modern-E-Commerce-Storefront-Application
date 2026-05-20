@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "@tanstack/react-router";
 import { ShoppingBag } from "lucide-react";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
 import Container from "@/components/layout/Container.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { useCart } from "@/context/CartContext.tsx";
@@ -10,10 +8,6 @@ import { placeOrder, retryPayment, getPaymentStatus } from "@/api/orders.ts";
 import { ApiError } from "@/api/client.ts";
 import { toast } from "sonner";
 import PaymentForm from "@/components/checkout/PaymentForm.tsx";
-
-const stripePromise = loadStripe(
-  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
-);
 
 const SESSION_KEY = "pending_order";
 
@@ -368,14 +362,12 @@ export default function Checkout() {
       </form>
 
       {order && (
-        <Elements stripe={stripePromise}>
-          <PaymentForm
-            order={order}
-            onSuccess={handlePaymentSuccess}
-            onRetryPayment={handleRetryPayment}
-            onClose={handleCloseModal}
-          />
-        </Elements>
+        <PaymentForm
+          order={order}
+          onSuccess={handlePaymentSuccess}
+          onRetryPayment={handleRetryPayment}
+          onClose={handleCloseModal}
+        />
       )}
     </Container>
   );
