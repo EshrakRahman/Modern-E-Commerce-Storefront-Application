@@ -27,7 +27,9 @@ export default function OnSalePage() {
 
   const saleProducts = useMemo(() => {
     if (!products) return [];
-    return products.filter((p) => p.has_discount || (p.compare_price != null && p.compare_price > p.price));
+    return products
+      .filter((p) => p.has_discount || (p.compare_price != null && p.compare_price > p.price))
+      .slice(0, 10);
   }, [products]);
 
   const { items, totalPages, totalCount, categories } = useProductFilters(saleProducts, filters);

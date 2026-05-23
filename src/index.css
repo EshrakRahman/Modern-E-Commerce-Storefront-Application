@@ -134,6 +134,21 @@
   html {
     @apply font-sans;
   }
+  button,
+  a,
+  select,
+  summary,
+  [role="button"],
+  input[type="button"],
+  input[type="submit"] {
+    cursor: pointer;
+  }
+  button:disabled,
+  input:disabled,
+  select:disabled,
+  [role="button"][aria-disabled="true"] {
+    cursor: not-allowed;
+  }
 }
 
 .scrollbar-hide {
@@ -143,4 +158,35 @@
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;             /* Chrome, Safari */
+}
+
+@keyframes heart-pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.35);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-heart-pop {
+  animation: heart-pop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, #f4f3f2 25%, #e8e6e4 50%, #f4f3f2 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite linear;
 }

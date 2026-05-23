@@ -14,7 +14,7 @@ export default function Navbar() {
     const [openSearchPanel, setOpenSearchPanel] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const { user, logout } = useAuth();
-    const { count } = useCart();
+    const { count, setIsCartDrawerOpen } = useCart();
 
     return (
         <section className="px-4 py-4 h-15 lg:hidden">
@@ -40,10 +40,10 @@ export default function Navbar() {
                         onClick={() => setOpenSearchPanel(!openSearchPanel)}
                         className="text-2xl"
                     /> }
-                    <Link to="/cart" className="relative">
+                    <button onClick={() => setIsCartDrawerOpen(true)} className="relative hover:cursor-pointer">
                       <FiShoppingCart className="text-2xl" />
                       {count > 0 && <span className="absolute -top-2 -right-2 w-4.5 h-4.5 flex items-center justify-center bg-black text-white text-[10px] font-bold rounded-full">{count}</span>}
-                    </Link>
+                    </button>
                     <Link to="/wishlist" className="relative">
                       <FiHeart className="text-2xl" />
                     </Link>

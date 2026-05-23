@@ -8,6 +8,7 @@ import { placeOrder, confirmPayment, retryPayment } from "@/api/orders.ts";
 import { ApiError } from "@/api/client.ts";
 import { toast } from "sonner";
 import PaymentForm from "@/components/checkout/PaymentForm.tsx";
+import ProductImg from "@/assets/product_one.png";
 
 const SESSION_KEY = "pending_order";
 
@@ -20,16 +21,26 @@ type PendingOrder = {
 
 export default function Checkout() {
   const navigate = useNavigate();
-  const { items, preview, clearCart } = useCart();
+  const {
+    items,
+    clearCart,
+    subtotal,
+    shipping,
+    discount,
+    total,
+    activeCoupon
+  } = useCart();
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [zip, setZip] = useState("");
-  const [notes, setNotes] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    city: "",
+    state: "",
+    zip: "",
+    notes: "",
+  });
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -38,11 +49,12 @@ export default function Checkout() {
     return saved ? JSON.parse(saved) : null;
   });
 
-  const subtotal = preview
-    ? preview.subtotal
-    : items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const shipping = subtotal > 500 ? 0 : 15;
-  const total = preview ? preview.total : subtotal + shipping;
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   useEffect(() => {
     if (order) {
@@ -67,15 +79,16 @@ export default function Checkout() {
         })),
         payment_method: "stripe",
         shipping_address: {
-          name,
-          phone,
-          address,
-          city,
-          state,
-          zip,
+          name: formData.name,
+          phone: formData.phone,
+          address: formData.address,
+          city: formData.city,
+          state: formData.state,
+          zip: formData.zip,
           country: "US",
         },
-        notes: notes || undefined,
+        notes: formData.notes || undefined,
+        coupon_code: activeCoupon?.code || undefined,
       });
 
       setOrder({
@@ -198,8 +211,9 @@ export default function Checkout() {
                     </label>
                     <input
                       type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
                       placeholder="John Doe"
                       className={inputClass}
                       required
@@ -212,8 +226,9 @@ export default function Checkout() {
                     </label>
                     <input
                       type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
                       placeholder="john@example.com"
                       className={inputClass}
                       required
@@ -227,8 +242,9 @@ export default function Checkout() {
                   </label>
                   <input
                     type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
                     placeholder="+1 (555) 000-0000"
                     className={inputClass}
                     required
@@ -247,8 +263,9 @@ export default function Checkout() {
                   </label>
                   <input
                     type="text"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
+                    name="address"
+                    value={formData.address}
+                    onChange={handleInputChange}
                     placeholder="123 Main St"
                     className={inputClass}
                     required
@@ -262,8 +279,9 @@ export default function Checkout() {
                     </label>
                     <input
                       type="text"
-                      value={city}
-                      onChange={(e) => setCity(e.target.value)}
+                      name="city"
+                      value={formData.city}
+                      onChange={handleInputChange}
                       placeholder="New York"
                       className={inputClass}
                       required
@@ -276,8 +294,9 @@ export default function Checkout() {
                     </label>
                     <input
                       type="text"
-                      value={state}
-                      onChange={(e) => setState(e.target.value)}
+                      name="state"
+                      value={formData.state}
+                      onChange={handleInputChange}
                       placeholder="NY"
                       className={inputClass}
                       required
@@ -290,8 +309,9 @@ export default function Checkout() {
                     </label>
                     <input
                       type="text"
-                      value={zip}
-                      onChange={(e) => setZip(e.target.value)}
+                      name="zip"
+                      value={formData.zip}
+                      onChange={handleInputChange}
                       placeholder="10001"
                       className={inputClass}
                       required
@@ -305,8 +325,9 @@ export default function Checkout() {
             <section>
               <h2 className="text-xl font-semibold mb-4">Order Notes</h2>
               <textarea
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
+                name="notes"
+                value={formData.notes}
+                onChange={handleInputChange}
                 placeholder="Leave at the door (optional)"
                 className={`${inputClass} resize-none h-24`}
                 disabled={loading}
@@ -337,6 +358,10 @@ export default function Checkout() {
                           src={item.image}
                           alt={item.product_name}
                           className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = ProductImg;
+                          }}
                         />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -373,6 +398,14 @@ export default function Checkout() {
                       : `$${shipping.toFixed(2)}`}
                   </span>
                 </div>
+                {discount > 0 && (
+                  <div className="flex justify-between text-sm text-emerald-600">
+                    <span>Discount ({activeCoupon?.code})</span>
+                    <span className="font-medium">
+                      -${discount.toFixed(2)}
+                    </span>
+                  </div>
+                )}
                 <div className="flex justify-between font-bold text-lg border-t pt-3">
                   <span>Total</span>
                   <span>${total.toFixed(2)}</span>

@@ -37,7 +37,23 @@ export async function apiFetch<T>(
     headers: { ...headers, ...options?.headers },
   });
 
-  const data = await res.json();
+  let data: any = {};
+  const contentType = res.headers.get("content-type");
+
+  if (contentType && contentType.includes("application/json")) {
+    try {
+      data = await res.json();
+    } catch {
+      data = { message: "Failed to parse server response." };
+    }
+  } else {
+    try {
+      const text = await res.text();
+      data = { message: text || `Server responded with status ${res.status}` };
+    } catch {
+      data = { message: `Server responded with status ${res.status}` };
+    }
+  }
 
   if (!res.ok) {
     throw new ApiError(

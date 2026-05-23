@@ -55,6 +55,7 @@ export const CartPreviewResponseSchema = z.object({
 });
 
 export const OrderItemSchema = z.object({
+  product_id: z.number(),
   product_name: z.string(),
   size_name: z.string().nullable(),
   quantity: z.number(),
@@ -87,6 +88,7 @@ export const OrderSchema = z.object({
   payment_status: z.string().nullable(),
   payment_intent_id: z.string().nullable().optional(),
   payment_intent_client_secret: z.string().nullable().optional(),
+  coupon_code: z.string().nullable().optional(),
   created_at: z.string(),
 });
 
@@ -102,7 +104,36 @@ export const PlaceOrderPayloadSchema = z.object({
   shipping_address: AddressSchema,
   billing_address: AddressSchema.nullable().optional(),
   notes: z.string().nullable().optional(),
-})
+  coupon_code: z.string().nullable().optional(),
+});
+
+export const ReviewSchema = z.object({
+  id: z.number(),
+  user_name: z.string().nullable().optional(),
+  product_id: z.number(),
+  rating: z.number(),
+  title: z.string().nullable().optional(),
+  body: z.string(),
+  is_approved: z.boolean().nullable().optional(),
+  created_at: z.string(),
+});
+
+export const ProductReviewsResponseSchema = z.object({
+  data: z.array(ReviewSchema),
+  meta: z.object({
+    average_rating: z.union([z.number(), z.string()]).nullable().optional(),
+    total_reviews: z.number(),
+  }),
+});
+
+export const CouponResponseSchema = z.object({
+  code: z.string(),
+  type: z.enum(["percentage", "fixed"]),
+  value: z.number(),
+  discount_amount: z.number(),
+  min_order_amount: z.number().nullable().optional(),
+  description: z.string().nullable().optional(),
+});
 
 export type Product = z.infer<typeof ProductSchema>;
 export type Category = z.infer<typeof CategorySchema>;
@@ -112,4 +143,7 @@ export type CartPreviewResponse = z.infer<typeof CartPreviewResponseSchema>;
 export type Order = z.infer<typeof OrderSchema>;
 export type PlaceOrderPayload = z.infer<typeof PlaceOrderPayloadSchema>;
 export type PlaceOrderItem = z.infer<typeof PlaceOrderItemSchema>;
+export type Review = z.infer<typeof ReviewSchema>;
+export type ProductReviewsResponse = z.infer<typeof ProductReviewsResponseSchema>;
+export type CouponResponse = z.infer<typeof CouponResponseSchema>;
 

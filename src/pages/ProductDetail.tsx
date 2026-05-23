@@ -1,7 +1,10 @@
 import { useParams } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { getProductBySlug } from "@/api/products.ts";
+import { getProductReviews } from "@/api/reviews.ts";
 import ProductShowcase from "@/components/product details/ProductShowcase.tsx";
+import ProductReviews from "@/components/reviews/ProductReviews.tsx";
+import SimilarProducts from "@/components/products/SimilarProducts.tsx";
 
 export default function ProductDetail() {
     const { slug } = useParams({ from: "/products/$slug" });
@@ -9,6 +12,12 @@ export default function ProductDetail() {
         queryKey: ['product', slug],
         queryFn: () => getProductBySlug(slug),
         enabled: !!slug,
+    });
+
+    const { data: reviewsData } = useQuery({
+        queryKey: ["reviews", product?.id, 1],
+        queryFn: () => getProductReviews(product!.id, 1),
+        enabled: !!product?.id,
     });
 
     if (isLoading) {
@@ -33,5 +42,18 @@ export default function ProductDetail() {
         );
     }
 
-    return <ProductShowcase product={product} />;
+    const averageRating = reviewsData?.meta?.average_rating ? Number(reviewsData.meta.average_rating) : 0;
+    const totalReviews = reviewsData?.meta?.total_reviews ?? 0;
+
+    return (
+        <>
+            <ProductShowcase 
+                product={product} 
+                averageRating={averageRating}
+                totalReviews={totalReviews}
+            />
+            <SimilarProducts currentProduct={product} />
+            <ProductReviews product={product} />
+        </>
+    );
 }

@@ -28,7 +28,7 @@ const NAV_LINKS = [
 export default function DesktopNav() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { user, logout } = useAuth();
-  const { count } = useCart();
+  const { count, setIsCartDrawerOpen } = useCart();
   const { pathname } = useLocation();
 
   const isActive = (path: string) => pathname === path;
@@ -93,14 +93,14 @@ export default function DesktopNav() {
 
           <div className="flex items-center gap-3">
             <SearchInput />
-            <Link to="/cart" className="relative p-2 hover:bg-gray-50 rounded-lg transition-colors">
+            <button onClick={() => setIsCartDrawerOpen(true)} className="relative p-2 hover:bg-gray-50 rounded-lg transition-colors hover:cursor-pointer">
               <FiShoppingCart className="text-xl" />
               {count > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 w-4.5 h-4.5 flex items-center justify-center bg-black text-white text-[10px] font-bold rounded-full">
                   {count}
                 </span>
               )}
-            </Link>
+            </button>
             <Link to="/wishlist" className="p-2 hover:bg-gray-50 rounded-lg transition-colors">
               <FiHeart className="text-xl" />
             </Link>

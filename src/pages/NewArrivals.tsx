@@ -21,7 +21,7 @@ export default function NewArrivalsPage() {
 
   const { data: products, isLoading } = useQuery({
     queryKey: ["products", "latest"],
-    queryFn: () => getProducts({ sort: "latest" }),
+    queryFn: () => getProducts({ sort: "latest", limit: 10 }),
   });
 
   const { items, totalPages, totalCount, categories } = useProductFilters(products, filters);

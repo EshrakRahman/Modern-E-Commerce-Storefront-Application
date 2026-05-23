@@ -4,13 +4,15 @@ import DesktopNav from "@/components/navbar/DesktopNav";
 import CTA from "@/components/cta/CTA.tsx";
 import Footer from "@/components/footer/Footer.tsx";
 import {Toaster} from "sonner";
+import CartDrawer from "@/components/cart/CartDrawer.tsx";
 
 export const rootRoute = createRootRoute({
     component: () => (
         <>
-                <Toaster position="top-right" richColors/>
+            <Toaster position="top-right" richColors/>
             <Navbar/>
             <DesktopNav/>
+            <CartDrawer/>
             <Outlet/>
             <CTA/>
             <Footer/>
