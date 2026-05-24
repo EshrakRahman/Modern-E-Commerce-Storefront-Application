@@ -6,7 +6,7 @@ import { Link } from "@tanstack/react-router";
 import { useWishlist } from "@/context/WishlistContext.tsx";
 
 export default function Wishlist() {
-  const { items, isLoading, remove } = useWishlist();
+  const { items, isLoading } = useWishlist();
 
   return (
     <Container>
@@ -45,26 +45,19 @@ export default function Wishlist() {
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
             {items.map((product) => (
-                <div key={product.id} className="relative group">
-                  <button
-                    onClick={() => remove(product.id)}
-                    className="absolute top-2 right-2 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white shadow-md hover:scale-110 transition-transform"
-                  >
-                    <FiHeart className="text-red-500 fill-red-500" />
-                  </button>
-                  <ProductCard
-                    id={product.id}
-                    slug={product.slug}
-                    title={product.name}
-                    price={product.price}
-                    sale_price={product.sale_price}
-                    has_discount={product.has_discount}
-                    compare_price={product.compare_price}
-                    ratings={4.5}
-                    prdImg={product.image ?? undefined}
-                    sizes={product.sizes}
-                  />
-                </div>
+              <ProductCard
+                key={product.id}
+                id={product.id}
+                slug={product.slug}
+                title={product.name}
+                price={product.price}
+                sale_price={product.sale_price}
+                has_discount={product.has_discount}
+                compare_price={product.compare_price}
+                ratings={4.5}
+                prdImg={product.image ?? undefined}
+                sizes={product.sizes}
+              />
             ))}
           </div>
         )}
