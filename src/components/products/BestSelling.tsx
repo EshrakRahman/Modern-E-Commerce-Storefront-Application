@@ -8,7 +8,10 @@ import { useRef} from "react";
 export default function BestSelling() {
     const {data} = useSuspenseQuery({
         queryKey: ['best-selling'],
-        queryFn: () => getProducts({ featured: true }),
+        queryFn: async () => {
+            const res = await getProducts({ featured: true, limit: 10 });
+            return res.data;
+        },
     });
 
     const scrollRef = useRef<HTMLDivElement | null>(null);

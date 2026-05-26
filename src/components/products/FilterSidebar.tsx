@@ -1,12 +1,17 @@
 import { PRICE_RANGES, SIZES } from "@/lib/filters";
 
+type CategoryItem = {
+  name: string;
+  slug: string;
+};
+
 type Props = {
-  categories: string[];
+  categories: CategoryItem[];
   activeCategory?: string;
   activeMinPrice?: string;
   activeMaxPrice?: string;
   activeSize?: string;
-  onToggleCategory: (cat: string) => void;
+  onToggleCategory: (slug: string) => void;
   onTogglePrice: (min: string, max: string | undefined) => void;
   onToggleSize: (size: string) => void;
 };
@@ -29,17 +34,16 @@ export default function FilterSidebar({
             <h3 className="font-semibold mb-3">Category</h3>
             <ul className="space-y-2 text-sm text-gray-600">
               {categories.map((cat) => {
-                const catSlug = cat.toLowerCase().replace(/\s+/g, "-");
-                const isActive = activeCategory !== undefined && activeCategory !== "all" && activeCategory === catSlug;
+                const isActive = activeCategory === cat.slug;
                 return (
-                  <li key={cat}>
+                  <li key={cat.slug}>
                     <button
-                      onClick={() => onToggleCategory(cat)}
+                      onClick={() => onToggleCategory(cat.slug)}
                       className={`w-full text-left cursor-pointer transition-colors ${
                         isActive ? "text-black font-semibold" : "hover:text-black"
                       }`}
                     >
-                      {cat}
+                      {cat.name}
                     </button>
                   </li>
                 );
@@ -91,17 +95,16 @@ export default function FilterSidebar({
 
       <div className="flex lg:hidden gap-2 mb-6 overflow-x-auto pb-2">
         {categories.map((cat) => {
-          const catSlug = cat.toLowerCase().replace(/\s+/g, "-");
-          const isActive = activeCategory !== undefined && activeCategory !== "all" && activeCategory === catSlug;
+          const isActive = activeCategory === cat.slug;
           return (
             <button
-              key={cat}
-              onClick={() => onToggleCategory(cat)}
+              key={cat.slug}
+              onClick={() => onToggleCategory(cat.slug)}
               className={`px-4 py-2 text-sm rounded-full border whitespace-nowrap transition-colors cursor-pointer ${
                 isActive ? "bg-black text-white border-black" : "border-gray-200 hover:border-gray-400"
               }`}
             >
-              {cat}
+              {cat.name}
             </button>
           );
         })}

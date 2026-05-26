@@ -38,8 +38,8 @@ export default function SearchInput({ onClose }: SearchInputProps) {
     setLoading(true);
     const delayDebounceFn = setTimeout(async () => {
       try {
-        const results = await getProducts({ search: trimmed });
-        setProducts(results.slice(0, 5));
+        const resObj = await getProducts({ search: trimmed });
+        setProducts(resObj.data.slice(0, 5));
       } catch {
         setProducts([]);
       } finally {

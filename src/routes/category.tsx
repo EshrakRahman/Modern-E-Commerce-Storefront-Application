@@ -7,7 +7,12 @@ export const categoryRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/categories/$slug",
   validateSearch: z.object({
-    q: z.string().optional(),
+    cursor: z.any().optional(),
+    minPrice: z.any().optional(),
+    maxPrice: z.any().optional(),
+    size: z.any().optional(),
+    q: z.any().optional(),
+    page: z.any().optional(),
   }),
   component: CategoryProducts,
 });

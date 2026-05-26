@@ -2,18 +2,27 @@ import { useState } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { Link, useLocation } from "@tanstack/react-router";
 
-const CATEGORIES = [
-  { name: "T-Shirts", slug: "t-shirts" },
-  { name: "Shirts", slug: "shirts" },
-  { name: "Pants", slug: "pants" },
-  { name: "Jackets", slug: "jackets" },
+import { useQuery } from "@tanstack/react-query";
+import { getCategories } from "@/api/categories";
+
+const FALLBACK_CATEGORIES = [
+  { name: "Clothing", slug: "clothing" },
   { name: "Shoes", slug: "shoes" },
   { name: "Accessories", slug: "accessories" },
+  { name: "Electronics", slug: "electronics" },
+  { name: "Home & Kitchen", slug: "home-kitchen" },
 ];
 
 export default function NavItems() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { pathname } = useLocation();
+
+  const { data: categoriesData } = useQuery({
+    queryKey: ["categories"],
+    queryFn: getCategories,
+  });
+
+  const categories = categoriesData ?? FALLBACK_CATEGORIES;
 
   const isActive = (path: string) => pathname === path;
 
@@ -39,7 +48,7 @@ export default function NavItems() {
           </button>
           {isDropdownOpen && (
             <ul className="ml-3 mt-1 flex flex-col gap-1 border-l border-gray-700 pl-3">
-              {CATEGORIES.map((cat) => (
+              {categories.map((cat) => (
                 <li key={cat.slug}>
                   <Link
                     to="/categories/$slug"

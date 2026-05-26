@@ -7,11 +7,12 @@ export const newArrivalsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/new-arrivals",
   validateSearch: z.object({
-    page: z.string().optional().default("1"),
-    category: z.string().optional(),
-    minPrice: z.string().optional(),
-    maxPrice: z.string().optional(),
-    size: z.string().optional(),
+    cursor: z.any().optional(),
+    category: z.any().optional(),
+    minPrice: z.any().optional(),
+    maxPrice: z.any().optional(),
+    size: z.any().optional(),
+    page: z.any().optional(),
   }),
   component: NewArrivalsPage,
 });

@@ -10,7 +10,10 @@ export default function NewArrivals() {
     const scrollRef = useRef<HTMLDivElement | null>(null);
     const {data} = useSuspenseQuery({
         queryKey: ['products', 'latest'],
-        queryFn: () => getProducts({ sort: 'latest', limit: 10 }),
+        queryFn: async () => {
+            const res = await getProducts({ sort: 'latest', limit: 10 });
+            return res.data;
+        },
     });
 
     const scrollLeft = () => {

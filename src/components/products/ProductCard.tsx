@@ -80,17 +80,15 @@ export default function ProductCard({ id, title, ratings, slug, price, sale_pric
                             <Heart className={`w-4 h-4 ${wishlisted ? "fill-red-500 text-red-500" : ""}`} />
                         </button>
                     )}
-                    {prdImg && (
-                        <img
-                            className="w-full h-full object-cover rounded-2xl group-hover:scale-105 transition-transform duration-500"
-                            src={prdImg}
-                            alt={title}
-                            onError={(e) => {
-                                e.currentTarget.onerror = null;
-                                e.currentTarget.src = ProductImg;
-                            }}
-                        />
-                    )}
+                    <img
+                        className="w-full h-full object-cover rounded-2xl group-hover:scale-105 transition-transform duration-500"
+                        src={prdImg || ProductImg}
+                        alt={title}
+                        onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = ProductImg;
+                        }}
+                    />
                     <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                         <button
                             onClick={handleAddToCart}

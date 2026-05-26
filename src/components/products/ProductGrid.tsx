@@ -5,9 +5,21 @@ import type { Product } from "@/schemas/productSchema";
 type Props = {
   products: Product[];
   isLoading: boolean;
+  error?: any;
 };
 
-export default function ProductGrid({ products, isLoading }: Props) {
+export default function ProductGrid({ products, isLoading, error }: Props) {
+  if (error) {
+    return (
+      <div className="text-center py-20 bg-red-50/50 rounded-2xl border border-red-100 p-6">
+        <h2 className="text-xl font-semibold text-red-700">Failed to load products</h2>
+        <p className="mt-2 text-red-500 text-sm">
+          {error.message || "An unexpected error occurred. Please try again."}
+        </p>
+      </div>
+    );
+  }
+
   if (isLoading) {
     return (
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 animate-pulse">

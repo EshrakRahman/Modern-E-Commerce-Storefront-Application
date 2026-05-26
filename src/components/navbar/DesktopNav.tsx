@@ -9,13 +9,15 @@ import { useState } from "react";
 import { useAuth } from "@/context/AuthContext.tsx";
 import { useCart } from "@/context/CartContext.tsx";
 
-const CATEGORIES = [
-  { name: "T-Shirts", slug: "t-shirts" },
-  { name: "Shirts", slug: "shirts" },
-  { name: "Pants", slug: "pants" },
-  { name: "Jackets", slug: "jackets" },
+import { useQuery } from "@tanstack/react-query";
+import { getCategories } from "@/api/categories";
+
+const FALLBACK_CATEGORIES = [
+  { name: "Clothing", slug: "clothing" },
   { name: "Shoes", slug: "shoes" },
   { name: "Accessories", slug: "accessories" },
+  { name: "Electronics", slug: "electronics" },
+  { name: "Home & Kitchen", slug: "home-kitchen" },
 ];
 
 const NAV_LINKS = [
@@ -30,6 +32,13 @@ export default function DesktopNav() {
   const { user, logout } = useAuth();
   const { count, setIsCartDrawerOpen } = useCart();
   const { pathname } = useLocation();
+
+  const { data: categoriesData } = useQuery({
+    queryKey: ["categories"],
+    queryFn: getCategories,
+  });
+
+  const categories = categoriesData ?? FALLBACK_CATEGORIES;
 
   const isActive = (path: string) => pathname === path;
 
@@ -52,15 +61,15 @@ export default function DesktopNav() {
                     <div
                       className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
                         isActive(link.path)
-                          ? "text-black bg-gray-100"
-                          : "text-black/60 hover:text-black hover:bg-gray-50"
+                           ? "text-black bg-gray-100"
+                           : "text-black/60 hover:text-black hover:bg-gray-50"
                       }`}
                     >
                       <Link to={link.path}>{link.label}</Link>
                       <IoMdArrowDropdown className="text-sm" />
                     </div>
                     <ul className="absolute left-0 top-full w-44 pt-2 hidden group-hover:flex flex-col gap-1 bg-white rounded-xl shadow-lg border border-gray-100 p-2 z-50">
-                      {CATEGORIES.map((cat) => (
+                      {categories.map((cat) => (
                         <li key={cat.slug}>
                           <Link
                             to="/categories/$slug"

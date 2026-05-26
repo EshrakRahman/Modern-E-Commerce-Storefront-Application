@@ -33,14 +33,16 @@ export default function SimilarProducts({ currentProduct }: SimilarProductsProps
         let similarResults: Product[] = [];
         
         if (matchedCategory) {
-          const results = await getProducts({ category: matchedCategory.slug, limit: 12 });
+          const resObj = await getProducts({ category: matchedCategory.slug, limit: 12 });
+          const results = resObj.data;
           // Filter out the active product
           similarResults = results.filter((p) => p.id !== currentProduct.id);
         }
 
         // Fallback to featured products if we have too few category matches
         if (similarResults.length < 4) {
-          const featured = await getProducts({ featured: true, limit: 8 });
+          const featObj = await getProducts({ featured: true, limit: 8 });
+          const featured = featObj.data;
           similarResults = featured.filter((p) => p.id !== currentProduct.id);
           setTitle("Recommended for You");
         } else {
@@ -53,7 +55,8 @@ export default function SimilarProducts({ currentProduct }: SimilarProductsProps
       } catch (err) {
         // Fallback to featured on error
         try {
-          const featured = await getProducts({ featured: true, limit: 8 });
+          const featObj = await getProducts({ featured: true, limit: 8 });
+          const featured = featObj.data;
           if (active) {
             setProducts(featured.filter((p) => p.id !== currentProduct.id).slice(0, 8));
             setTitle("Recommended for You");
