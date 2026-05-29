@@ -14,6 +14,8 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/AuthContext.tsx";
 import { ApiError } from "@/api/client.ts";
 
+import signupImg from "@/assets/molly-mears-4_90zmmdo_4-unsplash.jpg";
+
 export function SignupForm({
   className,
   onSignIn,
@@ -208,8 +210,8 @@ export function SignupForm({
           </form>
           <div className="relative hidden bg-muted md:block">
             <img
-              src="/placeholder.svg"
-              alt="Image"
+              src={signupImg}
+              alt="Register illustration"
               className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
             />
           </div>
