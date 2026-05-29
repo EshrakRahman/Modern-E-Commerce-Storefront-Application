@@ -12,6 +12,7 @@ export const ProductSchema = z.object({
   name: z.string(),
   slug: z.string(),
   category: z.string().nullable(),
+  brand: z.string().nullable().optional(),
   description: z.string().nullable(),
   price: z.number(),
   sale_price: z.number().nullable().optional(),
@@ -30,6 +31,15 @@ export const CategorySchema = z.object({
   slug: z.string(),
   description: z.string().nullable(),
   created_at: z.string(),
+});
+
+export const BrandSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  slug: z.string(),
+  description: z.string().nullable(),
+  is_active: z.boolean().optional(),
+  created_at: z.string().optional(),
 });
 
 export const CategoryWithProductsSchema = CategorySchema.extend({
@@ -148,4 +158,5 @@ export type PlaceOrderItem = z.infer<typeof PlaceOrderItemSchema>;
 export type Review = z.infer<typeof ReviewSchema>;
 export type ProductReviewsResponse = z.infer<typeof ProductReviewsResponseSchema>;
 export type CouponResponse = z.infer<typeof CouponResponseSchema>;
+export type BrandType = z.infer<typeof BrandSchema>;
 

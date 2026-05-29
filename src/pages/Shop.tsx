@@ -10,7 +10,7 @@ import PaginationLimitFallback from "@/components/products/PaginationLimitFallba
 import { parseNumericParam, cleanStringParam } from "@/lib/utils";
 
 export default function ShopPage() {
-  const { cursor: cursorRaw, category: categoryRaw, minPrice: minPriceRaw, maxPrice: maxPriceRaw, size: sizeRaw, page: pageRaw } = useSearch({ from: "/shop" });
+  const { cursor: cursorRaw, category: categoryRaw, minPrice: minPriceRaw, maxPrice: maxPriceRaw, size: sizeRaw, page: pageRaw, brand: brandRaw } = useSearch({ from: "/shop" });
   const navigate = useNavigate({ from: "/shop" });
 
   const category = cleanStringParam(categoryRaw);
@@ -19,6 +19,7 @@ export default function ShopPage() {
   const maxPriceStr = cleanStringParam(maxPriceRaw);
   const size = cleanStringParam(sizeRaw);
   const page = parseNumericParam(pageRaw) || 1;
+  const brand = cleanStringParam(brandRaw);
 
   const filters = {
     category,
@@ -26,9 +27,10 @@ export default function ShopPage() {
     maxPrice: parseNumericParam(maxPriceStr),
     size,
     cursor,
+    brand,
   };
 
-  const isUnfilteredAllProducts = !category && !minPriceStr && !maxPriceStr && !size;
+  const isUnfilteredAllProducts = !category && !minPriceStr && !maxPriceStr && !size && !brand;
   const isLimitReached = isUnfilteredAllProducts && page >= 3;
 
   const { data: paginatedData, isLoading: isProductsLoading, error: productsError } = useQuery({
@@ -40,6 +42,7 @@ export default function ShopPage() {
       minPrice: filters.minPrice,
       maxPrice: filters.maxPrice,
       size: filters.size,
+      brand: filters.brand,
     }),
     enabled: !isLimitReached,
   });
@@ -60,31 +63,36 @@ export default function ShopPage() {
 
   const toggleCategory = (catSlug: string) => {
     const nextCategory = category === catSlug ? undefined : catSlug;
-    navigate({ search: { cursor: undefined, page: undefined, category: nextCategory, minPrice: minPriceStr, maxPrice: maxPriceStr, size } });
+    navigate({ search: { cursor: undefined, page: undefined, category: nextCategory, minPrice: minPriceStr, maxPrice: maxPriceStr, size, brand } });
   };
 
   const togglePrice = (min: string, max: string | undefined) => {
     const isActive = minPriceStr === min && maxPriceStr === (max ?? undefined);
     const searchParams = isActive
-      ? { cursor: undefined, page: undefined, category, minPrice: undefined, maxPrice: undefined, size }
-      : { cursor: undefined, page: undefined, category, minPrice: min, maxPrice: max ?? undefined, size };
+      ? { cursor: undefined, page: undefined, category, minPrice: undefined, maxPrice: undefined, size, brand }
+      : { cursor: undefined, page: undefined, category, minPrice: min, maxPrice: max ?? undefined, size, brand };
     navigate({ search: searchParams });
   };
 
   const toggleSize = (s: string) => {
     const nextSize = size === s ? undefined : s;
-    navigate({ search: { cursor: undefined, page: undefined, category, minPrice: minPriceStr, maxPrice: maxPriceStr, size: nextSize } });
+    navigate({ search: { cursor: undefined, page: undefined, category, minPrice: minPriceStr, maxPrice: maxPriceStr, size: nextSize, brand } });
+  };
+
+  const toggleBrand = (brandSlug: string) => {
+    const nextBrand = brand === brandSlug ? undefined : brandSlug;
+    navigate({ search: { cursor: undefined, page: undefined, category, minPrice: minPriceStr, maxPrice: maxPriceStr, size, brand: nextBrand } });
   };
 
   const handleNext = () => {
     if (nextCursor) {
-      navigate({ search: { cursor: nextCursor, page: page + 1, category, minPrice: minPriceStr, maxPrice: maxPriceStr, size } });
+      navigate({ search: { cursor: nextCursor, page: page + 1, category, minPrice: minPriceStr, maxPrice: maxPriceStr, size, brand } });
     }
   };
 
   const handlePrev = () => {
     if (prevCursor) {
-      navigate({ search: { cursor: prevCursor, page: Math.max(1, page - 1), category, minPrice: minPriceStr, maxPrice: maxPriceStr, size } });
+      navigate({ search: { cursor: prevCursor, page: Math.max(1, page - 1), category, minPrice: minPriceStr, maxPrice: maxPriceStr, size, brand } });
     }
   };
 
@@ -105,9 +113,11 @@ export default function ShopPage() {
             activeMinPrice={minPriceStr}
             activeMaxPrice={maxPriceStr}
             activeSize={size}
+            activeBrand={brand}
             onToggleCategory={toggleCategory}
             onTogglePrice={togglePrice}
             onToggleSize={toggleSize}
+            onToggleBrand={toggleBrand}
           />
 
           <div className="flex-1">

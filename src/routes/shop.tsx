@@ -13,6 +13,7 @@ export const shopRoute = createRoute({
     maxPrice: z.any().optional(),
     size: z.any().optional(),
     page: z.any().optional(),
+    brand: z.any().optional(),
   }),
   component: ShopPage,
 });

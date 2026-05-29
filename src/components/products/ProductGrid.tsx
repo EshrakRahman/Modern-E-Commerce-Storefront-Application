@@ -59,6 +59,7 @@ export default function ProductGrid({ products, isLoading, error }: Props) {
             ratings={4.5}
             prdImg={product.image ?? undefined}
             sizes={product.sizes}
+            brand={product.brand}
           />
       ))}
     </div>

@@ -250,4 +250,34 @@ describe("ShopPage Component", () => {
     expect(productName).toBeInTheDocument();
     expect(screen.queryByText("Looking for Something Specific?")).not.toBeInTheDocument();
   });
+
+  it("should query getProducts with brand filter from route search parameters", async () => {
+    vi.mocked(useSearch).mockReturnValue({
+      cursor: undefined,
+      category: undefined,
+      minPrice: undefined,
+      maxPrice: undefined,
+      size: undefined,
+      brand: "nike",
+    });
+
+    vi.mocked(getProducts).mockResolvedValue({
+      data: [mockProduct],
+      meta: {
+        per_page: 12,
+        next_cursor: null,
+        prev_cursor: null,
+      },
+    });
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <ShopPage />
+      </QueryClientProvider>
+    );
+
+    expect(getProducts).toHaveBeenCalledWith(expect.objectContaining({
+      brand: "nike",
+    }));
+  });
 });

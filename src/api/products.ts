@@ -34,6 +34,7 @@ export async function getProducts(
     maxPrice?: number;
     size?: string;
     onSale?: boolean;
+    brand?: string;
   }
 ): Promise<PaginatedProducts> {
   const query = new URLSearchParams();
@@ -49,6 +50,7 @@ export async function getProducts(
   if (params?.minPrice !== undefined) query.set("min_price", String(params.minPrice));
   if (params?.maxPrice !== undefined) query.set("max_price", String(params.maxPrice));
   if (params?.size) query.set("size", params.size);
+  if (params?.brand) query.set("brand", params.brand);
 
   const qs = query.toString();
   const path = qs ? `/v1/products?${qs}` : "/v1/products";

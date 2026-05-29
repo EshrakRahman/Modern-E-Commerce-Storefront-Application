@@ -111,5 +111,27 @@ describe("getProducts API", () => {
     expect(result.data).toHaveLength(1);
     expect(result.meta).toBeUndefined();
   });
+
+  it("should pass brand parameter to the API path", async () => {
+    const mockApiResponse = {
+      data: [{ ...mockProduct, brand: "Nike" }],
+      meta: {
+        current_page: 1,
+        from: 1,
+        last_page: 1,
+        per_page: 20,
+        to: 1,
+        total: 1,
+      },
+    };
+
+    vi.mocked(apiFetch).mockResolvedValueOnce(mockApiResponse);
+
+    const result = await getProducts({ brand: "nike" });
+
+    expect(apiFetch).toHaveBeenCalledWith("/v1/products?brand=nike");
+    expect(result.data).toBeDefined();
+    expect(result.data[0].brand).toBe("Nike");
+  });
 });
 

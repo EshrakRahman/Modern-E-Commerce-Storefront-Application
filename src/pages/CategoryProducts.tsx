@@ -11,7 +11,7 @@ import { parseNumericParam, cleanStringParam } from "@/lib/utils";
 
 export default function CategoryProducts() {
   const { slug: rawSlug } = useParams({ from: "/categories/$slug" });
-  const { cursor: cursorRaw, minPrice: minPriceRaw, maxPrice: maxPriceRaw, size: sizeRaw, q: qRaw, page: pageRaw } = useSearch({ from: "/categories/$slug" });
+  const { cursor: cursorRaw, minPrice: minPriceRaw, maxPrice: maxPriceRaw, size: sizeRaw, q: qRaw, page: pageRaw, brand: brandRaw } = useSearch({ from: "/categories/$slug" });
   const navigate = useNavigate({ from: "/categories/$slug" });
 
   const slug = cleanStringParam(rawSlug) || "all";
@@ -21,6 +21,7 @@ export default function CategoryProducts() {
   const size = cleanStringParam(sizeRaw);
   const q = cleanStringParam(qRaw);
   const page = parseNumericParam(pageRaw) || 1;
+  const brand = cleanStringParam(brandRaw);
 
   const filters = {
     cursor,
@@ -28,9 +29,10 @@ export default function CategoryProducts() {
     maxPrice: parseNumericParam(maxPriceStr),
     size,
     q,
+    brand,
   };
 
-  const isUnfilteredAllProducts = slug === "all" && !minPriceStr && !maxPriceStr && !size && !q;
+  const isUnfilteredAllProducts = slug === "all" && !minPriceStr && !maxPriceStr && !size && !q && !brand;
   const isLimitReached = isUnfilteredAllProducts && page >= 3;
 
   const queryKey = ["products", { slug, sort: "latest", ...filters }];
@@ -45,6 +47,7 @@ export default function CategoryProducts() {
       minPrice: filters.minPrice,
       maxPrice: filters.maxPrice,
       size: filters.size,
+      brand: filters.brand,
     });
   };
 
@@ -81,29 +84,36 @@ export default function CategoryProducts() {
   const handleCategoryClick = (catSlug: string) => {
     navigate({
       to: `/categories/${catSlug}`,
-      search: { cursor: undefined, page: undefined, q },
+      search: { cursor: undefined, page: undefined, q, brand },
     });
   };
 
   const togglePrice = (min: string, max: string | undefined) => {
     const isActive = minPriceStr === min && maxPriceStr === (max ?? undefined);
     const searchParams = isActive
-      ? { cursor: undefined, page: undefined, minPrice: undefined, maxPrice: undefined, size, q }
-      : { cursor: undefined, page: undefined, minPrice: min, maxPrice: max ?? undefined, size, q };
+      ? { cursor: undefined, page: undefined, minPrice: undefined, maxPrice: undefined, size, q, brand }
+      : { cursor: undefined, page: undefined, minPrice: min, maxPrice: max ?? undefined, size, q, brand };
     navigate({ search: searchParams });
   };
 
   const toggleSize = (s: string) => {
     const nextSize = size === s ? undefined : s;
     navigate({
-      search: { cursor: undefined, page: undefined, minPrice: minPriceStr, maxPrice: maxPriceStr, size: nextSize, q },
+      search: { cursor: undefined, page: undefined, minPrice: minPriceStr, maxPrice: maxPriceStr, size: nextSize, q, brand },
+    });
+  };
+
+  const toggleBrand = (brandSlug: string) => {
+    const nextBrand = brand === brandSlug ? undefined : brandSlug;
+    navigate({
+      search: { cursor: undefined, page: undefined, minPrice: minPriceStr, maxPrice: maxPriceStr, size, q, brand: nextBrand },
     });
   };
 
   const handleNext = () => {
     if (nextCursor) {
       navigate({
-        search: { cursor: nextCursor, page: page + 1, minPrice: minPriceStr, maxPrice: maxPriceStr, size, q },
+        search: { cursor: nextCursor, page: page + 1, minPrice: minPriceStr, maxPrice: maxPriceStr, size, q, brand },
       });
     }
   };
@@ -111,7 +121,7 @@ export default function CategoryProducts() {
   const handlePrev = () => {
     if (prevCursor) {
       navigate({
-        search: { cursor: prevCursor, page: Math.max(1, page - 1), minPrice: minPriceStr, maxPrice: maxPriceStr, size, q },
+        search: { cursor: prevCursor, page: Math.max(1, page - 1), minPrice: minPriceStr, maxPrice: maxPriceStr, size, q, brand },
       });
     }
   };
@@ -133,9 +143,11 @@ export default function CategoryProducts() {
             activeMinPrice={minPriceStr}
             activeMaxPrice={maxPriceStr}
             activeSize={size}
+            activeBrand={brand}
             onToggleCategory={handleCategoryClick}
             onTogglePrice={togglePrice}
             onToggleSize={toggleSize}
+            onToggleBrand={toggleBrand}
           />
 
           <div className="flex-1">

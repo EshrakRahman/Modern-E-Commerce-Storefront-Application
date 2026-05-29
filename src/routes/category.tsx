@@ -13,6 +13,7 @@ export const categoryRoute = createRoute({
     size: z.any().optional(),
     q: z.any().optional(),
     page: z.any().optional(),
+    brand: z.any().optional(),
   }),
   component: CategoryProducts,
 });

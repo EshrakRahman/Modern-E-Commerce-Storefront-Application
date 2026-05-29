@@ -19,6 +19,9 @@ export default function ProductPriceInfo({ product, averageRating, totalReviews 
 
     return (
         <section className="product-price-info flex flex-col gap-4">
+            {product.brand && (
+                <span className="text-xs uppercase tracking-wider text-black/50 font-extrabold -mb-2">{product.brand}</span>
+            )}
             <h1 className="font-extrabold text-black text-3xl md:text-4xl tracking-tight leading-tight">{product.name}</h1>
             
             <div className="flex items-center gap-2">

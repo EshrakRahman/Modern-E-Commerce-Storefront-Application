@@ -19,9 +19,10 @@ type Props = {
     compare_price?: number | null;
     prdImg?: string;
     sizes?: Size[];
+    brand?: string | null;
 }
 
-export default function ProductCard({ id, title, ratings, slug, price, sale_price, has_discount, compare_price, prdImg, sizes }: Props) {
+export default function ProductCard({ id, title, ratings, slug, price, sale_price, has_discount, compare_price, prdImg, sizes, brand }: Props) {
     const { user } = useAuth();
     const { isWishlisted, add, remove } = useWishlist();
     const { addItem } = useCart();
@@ -100,6 +101,9 @@ export default function ProductCard({ id, title, ratings, slug, price, sale_pric
                     </div>
                 </div>
                 <div className="desc flex flex-col pt-3 gap-1">
+                    {brand && (
+                        <span className="text-[10px] tracking-wider uppercase font-bold text-black/55">{brand}</span>
+                    )}
                     <p className="text-gray-800 group-hover:text-black font-semibold text-sm leading-snug line-clamp-2 transition-colors">{title}</p>
                     <Ratings ratings={ratings} />
                     <div className="flex items-center gap-2 flex-wrap mt-0.5">

@@ -147,6 +147,7 @@ export default function SimilarProducts({ currentProduct }: SimilarProductsProps
                     has_discount={product.has_discount}
                     compare_price={product.compare_price}
                     sizes={product.sizes}
+                    brand={product.brand}
                   />
                 </div>
               ))
